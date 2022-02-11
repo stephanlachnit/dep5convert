@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2022 Stephan Lachnit <stephanlachnit@debian.org>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+__pycache__/
+*.egg-info/
+
+/.pytest_cache/
+/dist/
+/docs/build/
+/docs/source/api/

@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2022 Stephan Lachnit <stephanlachnit@debian.org>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  # lint jobs
+  flake8:
+    name: Lint - flake8
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install flake8
+        run: python3 -m pip install flake8
+      - name: Run flake8
+        run: make flake8
+  pylint:
+    name: Lint - pylint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install pylint
+        run: python3 -m pip install pylint
+      - name: Run pylint
+        run: make pylint
+  reuse:
+    name: Lint - REUSE
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run reuse lint
+        uses: fsfe/reuse-action@v1
+  # build jobs
+  build:
+    name: Build - module
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install build dependencies
+        run: python3 -m pip install build
+      - name: Build Python module
+        run: make build
+  docs:
+    name: Build - documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install Sphinx
+        run: python3 -m pip install sphinx sphinx_rtd_theme myst-parser sphinxcontrib.apidoc
+      - name: Build documentation
+        run: make docs
+  # test jobs
+  pytest:
+    name: Test - pytest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pytest
+        run: python3 -m pip install pytest
+      - name: Run pytest on Python ${{ matrix.python-version }}
+        run: make pytest
