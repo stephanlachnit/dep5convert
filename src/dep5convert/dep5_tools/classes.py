@@ -6,9 +6,6 @@
 Classes holding the information of a DEP5 document.
 """
 
-# pylint: disable=redefined-builtin
-
-
 from . import _util
 
 

@@ -19,3 +19,6 @@ indent-string = '    '
 [design]
 max-args = 8
 max-attributes = 8
+
+[variables]
+allowed-redefined-builtins = copyright,license
