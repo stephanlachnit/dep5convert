@@ -11,6 +11,7 @@ dep5convert documentation
    :caption: Contents:
 
    introduction
+   calir
    API<api/modules>
 
 
