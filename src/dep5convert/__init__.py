@@ -14,4 +14,4 @@ from . import dep5_tools, spdx_tools
 
 __all__ = ['dep5_tools', 'spdx_tools']
 
-_VERSION = pkg_resources.get_distribution(__name__).version
+__version__ = pkg_resources.get_distribution(__name__).version

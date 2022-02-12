@@ -11,7 +11,7 @@ import argparse
 import logging
 import sys
 
-from . import _VERSION
+from . import __version__
 
 
 def parse_args(args: list[str]) -> argparse.Namespace:
@@ -27,7 +27,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='tool for converting DEP5-style copyright files')
 
     parser.add_argument('-v', '--verbose', help='enable verbose output', action='store_true')
-    parser.add_argument('--version', action='version', version=f'%(prog)s {_VERSION}')
+    parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
 
     return parser.parse_args(args=args)
 
