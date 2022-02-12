@@ -49,8 +49,8 @@ pytest: egg_info
 
 .PHONY: clean
 clean:
-	rm -rf src/dep5convert.egg-info/
+	rm -rf **/__pycache__/
+	rm -rf **/*.egg-info/
 	rm -rf .pytest_cache/
 	rm -rf dist/
 	make -C docs clean
-	py3clean .
