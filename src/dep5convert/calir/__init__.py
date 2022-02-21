@@ -7,19 +7,10 @@ This module contains tools for the Copyright And License Intermedite Representat
 """
 
 
-from .classes import CALIR, SinlgeFile, FileCollectionMetadata
-from .dep5_metadata import CALIRMetadataDEP5, SingleFileMetadataDEP5, FileCollectionMetadataDEP5
-from .spdx_metadata import CALIRMetadataSPDX, SingleFileMetadataSPDX, FileCollectionMetadataSPDX
+from .classes import CALIR, CALIRSingle
 
 
 __all__ = [
     'CALIR',
-    'SinlgeFile',
-    'FileCollectionMetadata',
-    'CALIRMetadataDEP5',
-    'SingleFileMetadataDEP5',
-    'FileCollectionMetadataDEP5',
-    'CALIRMetadataSPDX',
-    'SingleFileMetadataSPDX',
-    'FileCollectionMetadataSPDX',
+    'CALIRSingle',
 ]

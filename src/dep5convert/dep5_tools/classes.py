@@ -6,12 +6,13 @@
 Classes holding the information of a DEP5 document.
 """
 
-from . import _util
+
+_DEP5_FORMAT_URL = 'https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/'
 
 
-class DEP5HeaderParagraph:
+class DEP5Metadata:
     """
-    Class containing the header paragraph of a DEP5 document.
+    Class containing the user-editable metadata of a DEP5 document.
     """
     def __init__(self,
                  upstream_name: str = None,
@@ -22,7 +23,6 @@ class DEP5HeaderParagraph:
                  license: str = None,
                  copyright: str = None,
                  ) -> None:
-        self._format = _util.DEP5_FORMAT_URL
         self._upstream_name = upstream_name
         self._upstream_contact = upstream_contact
         self._source = source
@@ -30,13 +30,6 @@ class DEP5HeaderParagraph:
         self._comment = comment
         self._license = license
         self._copyright = copyright
-
-    @property
-    def format(self) -> str:
-        """
-        URI of the format specification. Always points to the official Debian specification.
-        """
-        return self._format
 
     @property
     def upstream_name(self) -> str:
@@ -88,6 +81,30 @@ class DEP5HeaderParagraph:
         Same format as :obj:`DEP5FilesParagraph.copyright`.
         """
         return self._copyright
+
+
+class DEP5HeaderParagraph(DEP5Metadata):
+    """
+    Class containing the header paragraph of a DEP5 document.
+    Extends :class:`DEP5Metadata` with non-user-editable metadata.
+    """
+    def __init__(self, metadata: DEP5Metadata) -> None:
+        super().__init__(upstream_name=metadata.upstream_name,
+                         upstream_contact=metadata.upstream_contact.copy(),
+                         source=metadata.source,
+                         disclaimer=metadata.disclaimer,
+                         comment=metadata.comment,
+                         license=metadata.license,
+                         copyright=metadata.copyright,
+                         )
+        self._format = _DEP5_FORMAT_URL
+
+    @property
+    def format(self) -> str:
+        """
+        URI of the format specification. Always points to the official Debian specification.
+        """
+        return self._format
 
 
 class DEP5FilesParagraph:
@@ -165,23 +182,12 @@ class DEP5Document:
     Class holding all the information of a DEP5 document.
 
     Args:
-        header_paragraph: The header paragraph of the document.
-        files_paragraphs: List of files paragraphs in the document. Can be :obj:`None` or empty.
-        license_paragraphs: List of license paragraphs in the document. Can be :obj:`None` or empty.
+        metadata: The metadata from which to create the header paragraph of the document.
     """
-    def __init__(self,
-                 header_paragraph: DEP5HeaderParagraph,
-                 files_paragraphs: list[DEP5FilesParagraph] = None,
-                 license_paragraphs: list[DEP5LicenseParagraph] = None,
-                 ) -> None:
-        self._header_paragraph = header_paragraph
-        self._files_paragraphs = files_paragraphs
-        self._license_paragraphs = license_paragraphs
-
-        if self._files_paragraphs is None:
-            self._files_paragraphs = list[DEP5FilesParagraph]()
-        if self._license_paragraphs is None:
-            license_paragraphs = list[DEP5LicenseParagraph]()
+    def __init__(self, metadata: DEP5Metadata) -> None:
+        self._header_paragraph = DEP5HeaderParagraph(metadata)
+        self._files_paragraphs = list[DEP5FilesParagraph]()
+        self._license_paragraphs = list[DEP5LicenseParagraph]()
 
     @property
     def header_paragraph(self) -> DEP5HeaderParagraph:
@@ -210,7 +216,6 @@ class DEP5Document:
 
         Args:
             files_paragraph: The files paragraph to add.
-
         """
         self._files_paragraphs.append(files_paragraph)
 
@@ -220,6 +225,11 @@ class DEP5Document:
 
         Args:
             license_paragraph: The license paragraph to add.
-
         """
         self._license_paragraphs.append(license_paragraph)
+
+    def simplify(self) -> None:
+        """
+        Tries to find common glob patterns in files paragraphs to minimize the amount of file paragraphs.
+        """
+        pass  # pylint: disable=unnecessary-pass
