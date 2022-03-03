@@ -15,8 +15,8 @@ help:
 
 .PHONY: clean
 clean:
-	rm -rf build/
-	rm -rf source/api/
+	python3 -Bc "import shutil; shutil.rmtree('build', ignore_errors=True)"
+	python3 -Bc "import shutil, os.path; shutil.rmtree(os.path.join('source', 'api'), ignore_errors=True)"
 
 .PHONY: Makefile
 %: Makefile

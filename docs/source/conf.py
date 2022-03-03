@@ -16,7 +16,7 @@ import pkg_resources
 
 
 # add folder with module source to sys.path
-srcdir = pathlib.Path(__file__).parents[2].joinpath('src').resolve()
+srcdir = pathlib.Path(__file__).resolve().parents[2].joinpath('src')
 sys.path.insert(0, srcdir.as_posix())
 
 # project metadata

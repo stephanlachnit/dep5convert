@@ -34,7 +34,7 @@ pylint:
 
 .PHONY: reuse
 reuse:
-	reuse lint
+	python3 -m reuse lint
 
 ## test targets
 
@@ -49,8 +49,8 @@ pytest: egg_info
 
 .PHONY: clean
 clean:
-	rm -rf **/__pycache__/
-	rm -rf **/*.egg-info/
-	rm -rf .pytest_cache/
-	rm -rf dist/
+	python3 -Bc "import pathlib, shutil; [shutil.rmtree(p) for p in pathlib.Path('.').rglob('__pycache__')]"
+	python3 -Bc "import pathlib, shutil; [shutil.rmtree(p) for p in pathlib.Path('.').rglob('*.egg-info')]"
+	python3 -Bc "import shutil; shutil.rmtree('.pytest_cache', ignore_errors=True)"
+	python3 -Bc "import shutil; shutil.rmtree('dist', ignore_errors=True)"
 	make -C docs clean

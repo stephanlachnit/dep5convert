@@ -18,7 +18,9 @@ class DEP5ParseError(ValueError):
     """
     Raised when a DEP5 text could not be parsed.
     """
-    pass
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
 
 
 def parse_dep5(dep5_text: TextIOBase) -> DEP5Document:
@@ -31,6 +33,7 @@ def parse_dep5(dep5_text: TextIOBase) -> DEP5Document:
     Returns:
         The newly created :class:`~.dep5_tools.DEP5Document`.
     """
+    # pylint: disable=too-many-branches
     stanzas = list[tuple[str, str]]()
     for stanza in headerparser.scan_stanzas(dep5_text):
         stanzas.append(stanza)

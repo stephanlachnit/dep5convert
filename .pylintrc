@@ -3,22 +3,21 @@
 # SPDX-License-Identifier: CC0-1.0
 
 [master]
-
 fail-under = 10.0
 
-[string]
-
-check-quote-consistency = yes
+[messages control]
+disable = too-many-arguments, too-many-instance-attributes
 
 [format]
-
 max-line-length = 129
 indent-after-paren = 4
 indent-string = '    '
 
-[design]
-max-args = 8
-max-attributes = 8
+[similarities]
+ignore-docstrings = no
+
+[string]
+check-quote-consistency = yes
 
 [variables]
 allowed-redefined-builtins = copyright,license
