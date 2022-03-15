@@ -89,7 +89,7 @@ class CALIR:
                 object with the same path already exists.
         """
         for index, single_ in enumerate(self._singles):
-            if single.path.samefile(single_.path):
+            if single.path.resolve().as_posix() == single_.path.resolve().as_posix():
                 if overwrite:
                     self._singles[index] = single
                     return

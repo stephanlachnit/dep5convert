@@ -7,6 +7,11 @@ Classes holding the information of a DEP5 document.
 """
 
 
+from pathlib import Path
+
+from .util import expand_dep5_glob
+
+
 _DEP5_FORMAT_URL = 'https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/'
 
 
@@ -132,7 +137,7 @@ class DEP5FilesParagraph:
     @property
     def copyright(self) -> list[str]:
         """
-        List of free-form copyright statements. Typically in the form "%(years) %(author)s <%(contact)s>"
+        List of free-form copyright statements. Typically in the form "%(years) %(author)s <%(contact)s>".
         """
         return self._copyright
 
@@ -188,6 +193,7 @@ class DEP5Document:
         self._header_paragraph = DEP5HeaderParagraph(metadata)
         self._files_paragraphs = list[DEP5FilesParagraph]()
         self._license_paragraphs = list[DEP5LicenseParagraph]()
+        self._has_file_globs = False
 
     @property
     def header_paragraph(self) -> DEP5HeaderParagraph:
@@ -210,6 +216,13 @@ class DEP5Document:
         """
         return self._license_paragraphs
 
+    @property
+    def has_file_globs(self) -> bool:
+        """
+        True if any files paragraph contains glob patterns.
+        """
+        return self._has_file_globs
+
     def append_files_paragraph(self, files_paragraph: DEP5FilesParagraph) -> None:
         """
         Appends a files paragraph to the document.
@@ -218,15 +231,39 @@ class DEP5Document:
             files_paragraph: The files paragraph to add.
         """
         self._files_paragraphs.append(files_paragraph)
+        for pattern in files_paragraph.files:
+            if '*' in pattern or '?' in pattern:
+                self._has_file_globs = True
 
     def append_license_paragraph(self, license_paragraph: DEP5LicenseParagraph) -> None:
         """
         Appends a license paragraph to the document.
 
         Args:
-            license_paragraph: The license paragraph to add.
+            license_paragraph: License paragraph to add.
         """
         self._license_paragraphs.append(license_paragraph)
+
+    def expand_globs(self, source_path: Path = None) -> None:
+        """
+        Expands all glob patterns in files paragraphs given the clean source path.
+
+        Args:
+            source_path: Path to the clean source.
+
+        Raises:
+            ValueError: If :paramref:`~DEP5Document.expand_globs.source_path` is :obj:`None` but
+                :ob:`~DEP5Document.has_file_globs` is :obj:`True`.
+        """
+        if self.has_file_globs:
+            if source_path is None:
+                raise ValueError('source_path is None even though files paragraph has globs.')
+            for files_paragraph in self._files_paragraphs:
+                new_files = list[str]()
+                for pattern in files_paragraph.files:
+                    new_files += expand_dep5_glob(pattern, source_path)
+                files_paragraph._files = new_files.copy()
+            self._has_file_globs = False
 
     def simplify(self) -> None:
         """

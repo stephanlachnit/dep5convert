@@ -9,7 +9,7 @@ fail-under = 10.0
 disable = too-many-arguments, too-many-instance-attributes
 
 [format]
-max-line-length = 129
+max-line-length = 119
 indent-after-paren = 4
 indent-string = '    '
 

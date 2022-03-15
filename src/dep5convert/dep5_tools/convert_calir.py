@@ -11,7 +11,7 @@ from pathlib import Path
 
 from ..calir import CALIR, CALIRSingle
 from .classes import DEP5Document, DEP5FilesParagraph, DEP5Metadata
-from .util import expand_dep5_glob, guess_license_expression
+from .util import guess_license_expression
 
 
 def convert_calir_to_dep5(calir: CALIR, metadata: DEP5Metadata) -> DEP5Document:
@@ -21,12 +21,13 @@ def convert_calir_to_dep5(calir: CALIR, metadata: DEP5Metadata) -> DEP5Document:
     return dep5_dokument
 
 
-def convert_dep5_to_calir(dep5_document: DEP5Document, root_path: Path = None) -> CALIR:
+def convert_dep5_to_calir(dep5_document: DEP5Document, source_path: Path = None) -> CALIR:
     calir = CALIR()
+    dep5_document.expand_globs(source_path)
     for files_paragraph in dep5_document.files_paragraphs:
         license = guess_license_expression(files_paragraph.license)
-        for glob_pattern in files_paragraph.files:
-            for path in expand_dep5_glob(glob_pattern, root_path):
-                single = CALIRSingle(path, files_paragraph.copyright, license)
-                calir.add_single(single, overwrite=True)
+        for file in files_paragraph.files:
+            path = Path(file)
+            single = CALIRSingle(path, files_paragraph.copyright, license)
+            calir.add_single(single, overwrite=True)
     return calir

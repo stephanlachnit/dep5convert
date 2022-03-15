@@ -12,6 +12,7 @@ from io import StringIO, TextIOBase
 import headerparser
 
 from .classes import DEP5Document, DEP5Metadata, DEP5FilesParagraph, _DEP5_FORMAT_URL
+from .util import expand_rfc822_lists
 
 
 class DEP5ParseError(ValueError):
@@ -45,19 +46,19 @@ def parse_dep5(dep5_text: TextIOBase) -> DEP5Document:
             if keyval[1] != _DEP5_FORMAT_URL:
                 raise DEP5ParseError('Format does not equal Debian\'s official URI.')
         elif keyval[0] == 'Upstream-Name':
-            dep5_metadata.upstream_name = keyval[1]
+            dep5_metadata._upstream_name = keyval[1]
         elif keyval[0] == 'Upstream-Contact':
-            dep5_metadata.upstream_contact = keyval[1]
+            dep5_metadata._upstream_contact = expand_rfc822_lists(keyval[1])
         elif keyval[0] == 'Source':
-            dep5_metadata.source = keyval[1]
+            dep5_metadata._source = keyval[1]
         elif keyval[0] == 'Disclaimer':
-            dep5_metadata.disclaimer = keyval[1]
+            dep5_metadata._disclaimer = keyval[1]
         elif keyval[0] == 'Comment':
-            dep5_metadata.comment = keyval[1]
+            dep5_metadata._comment = keyval[1]
         elif keyval[0] == 'License':
-            dep5_metadata.license = keyval[1]
+            dep5_metadata._license = keyval[1]
         elif keyval[0] == 'Copyright':
-            dep5_metadata.copyright = keyval[1]
+            dep5_metadata._copyright = keyval[1]
         elif 'Files-Excluded' in keyval[0]:
             raise DEP5ParseError('Files-Excluded field is not supported.')
         else:
@@ -67,8 +68,8 @@ def parse_dep5(dep5_text: TextIOBase) -> DEP5Document:
     dep5_document = DEP5Document(dep5_metadata)
     for stanza in stanzas[1:]:
         if stanza[0][0] == 'Files':
-            files = stanza[0][1]  # split entries
-            copyright = stanza[1][1]  # split entries
+            files = expand_rfc822_lists(stanza[0][1])
+            copyright = expand_rfc822_lists(stanza[1][1])
             license = stanza[2][1]
             comment = None
             if len(stanza) == 4:
