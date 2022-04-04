@@ -17,7 +17,7 @@ from .util import guess_license_expression
 def convert_calir_to_dep5(calir: CALIR, metadata: DEP5Metadata) -> DEP5Document:
     dep5_dokument = DEP5Document(metadata)
     for single in calir.singles:
-        dep5_dokument.append_files_paragraph(DEP5FilesParagraph([single.path], single.copyright, single.license))
+        dep5_dokument.append_files_paragraph(DEP5FilesParagraph([single.path], single.copyright, str(single.license)))
     return dep5_dokument
 
 

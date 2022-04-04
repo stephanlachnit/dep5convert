@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dep5convert
+Upstream-Contact: Stephan Lachnit <stephanlachnit@debian.org>
+Source: https://github.com/stephanlachnit/dep5convert
+
+Files: README.md
+Copyright: 2022 Stephan Lachnit <stephanlachnit@debian.org>
+License: CC-BY-SA-4.0
+
+Files: setup.py
+Copyright: 2022 Stephan Lachnit <stephanlachnit@debian.org>
+License: CC0-1.0

@@ -8,6 +8,8 @@ Classes for the Copyright And License Intermediate Representation (CALIR).
 
 from pathlib import Path
 
+from license_expression import LicenseExpression
+
 
 class CALIRSingle:
     """
@@ -16,7 +18,7 @@ class CALIRSingle:
     def __init__(self,
                  path: Path,
                  copyright: list[str],
-                 license: str,
+                 license: LicenseExpression,
                  ) -> None:
         self._path = path
         self._copyright = copyright
@@ -37,7 +39,7 @@ class CALIRSingle:
         return self._copyright
 
     @property
-    def license(self) -> str:
+    def license(self) -> LicenseExpression:
         """
         The license expression applying to the file.
         """

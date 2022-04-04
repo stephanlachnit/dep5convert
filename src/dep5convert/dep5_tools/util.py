@@ -11,6 +11,8 @@ import os
 from pathlib import Path
 import re
 
+from license_expression import get_spdx_licensing, LicenseExpression
+
 
 def expand_rfc822_lists(string: str) -> list[str]:
     # TODO
@@ -48,5 +50,5 @@ def expand_dep5_glob(glob_pattern: str, source_path: Path) -> list[Path]:
                 yield path
 
 
-def guess_license_expression(license_str: str) -> str:
-    return license_str
+def guess_license_expression(license_str: str) -> LicenseExpression:
+    return get_spdx_licensing().parse(license_str)
